@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PomodoReport - YUTOOLS</title>
+  <!-- /* ★★★ Google FontsでInterフォントを読み込むリンクを追加 ★★★ */ -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/site-header.css">
+  <script src="/js/header.js" defer></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* proseのスタイル調整 (必要に応じて) */
+    .prose h2 { /* 読み物セクションの見出し */
+        /* font-family: 'Inter', sans-serif; */ /* header.htmlで指定するため、ここでは不要かも */
+        font-size: 1.5em; 
+        margin-top: 1.5em;
+        margin-bottom: 0.8em;
+    }
+    .prose p, 
+    .prose ul,
+    .prose li {
+        /* font-family: 'Inter', sans-serif; */ /* header.htmlで指定するため、ここでは不要かも */
+        font-size: 1rem; 
+        line-height: 1.75; 
+    }
+    .prose ul {
+        padding-left: 1.5em; 
+    }
+    .prose li > p { 
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    .prose strong { 
+        color: #2d3748; 
+        /* font-weight: 600; */ /* Interフォントの600ウェイトを使う場合 */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans"> 
+  <!-- /* ← このfont-sansクラスがシステムフォントを当てています */ -->
+
+  <div id="header-placeholder"></div>
+
+  <main class="p-4">
+    <div class="max-w-xl w-full mx-auto bg-white shadow-xl rounded-2xl p-4 sm:p-6 fade-in">
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <input id="searchInput" type="text" placeholder="検索..." class="w-full sm:w-1/2 p-2 border rounded-xl" oninput="renderLogs()">
+        <select id="tagFilter" class="border p-2 rounded-xl" onchange="renderLogs()">
+          <option value="">すべてのタグ</option>
+        </select>
+      </div>
+
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-semibold mb-2">ポモドーロタイマー</h2>
+        <div class="mb-2 flex flex-wrap justify-center items-center gap-2">
+          <select id="presetSelect" class="border p-2 rounded-lg w-full sm:w-auto">
+            <option value="25">25分（標準）</option>
+            <option value="3">3分</option>
+            <option value="5">5分</option>
+            <option value="10">10分</option>
+            <option value="15">15分</option>
+            <option value="custom">自分で入力する</option>
+          </select>
+          <input type="number" id="customMinutes" class="border p-2 rounded-lg w-full sm:w-24" placeholder="分数" style="display:none;" min="1">
+        </div>
+        <div class="text-5xl font-mono text-green-600" id="timer">25:00</div>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl">スタート</button>
+          <button id="resetBtn" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-xl">リセット</button>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">新しい作業ログ</h2>
+        <input id="taskTitle" type="text" class="w-full mb-2 p-2 border rounded-xl" placeholder="タイトル">
+        <textarea id="taskInput" rows="4" class="w-full p-2 border rounded-xl" placeholder="作業内容やメモ"></textarea>
+        <input id="taskTag" type="text" class="w-full mt-2 p-2 border rounded-xl" placeholder="タグ（任意）">
+        <button id="saveLogBtn" class="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl">保存</button>
+      </div>
+
+      <div class="mb-4 flex justify-end gap-2">
+        <button onclick="sortLogsAsc()" class="text-sm text-blue-600 hover:underline">古い順に並び替え</button>
+        <button onclick="sortLogsDesc()" class="text-sm text-blue-600 hover:underline">新しい順に並び替え</button>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold mb-2">あなたの作業メモ</h2>
+        <ul id="logList" class="space-y-2 text-sm text-gray-800"></ul>
+      </div>
+
+      <div class="mt-4">
+        <h2 class="text-lg font-semibold mb-2">日別集計</h2>
+        <ul id="summaryList" class="text-sm text-gray-700"></ul>
+      </div>
+    </div>
+
+    <section class="max-w-xl w-full mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-8 mt-8">
+      <article class="prose prose-lg max-w-none text-gray-800"> 
+        <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-slate-700">ポモドーロテクニックを使いこなそう</h2>
+        <p>ポモドーロテクニックは、イタリア人のフランチェスコ・シリロ氏によって1980年代後半に考案された時間管理術です。 短い作業セッション（通常25分）と短い休憩（通常5分）を繰り返すことで、集中力を維持し、生産性を高めることを目的としています。</p>
+        
+        <h3 class="text-xl font-semibold mt-6 mb-3 text-slate-700">PomodoReportツールの基本的な使い方:</h3>
+        <ul>
+          <li>ページ上部の「ポモドーロタイマー」で、作業したい時間（例：25分）を選び、「スタート」ボタンを押します。</li>
+          <li>タイマーが0になるとブラウザ通知でお知らせします（通知許可が必要です）。作業が一段落したら、下の「新しい作業ログ」にタスクのタイトル、内容、関連するタグ（例：「会議」「開発」「資料作成」など）を記録し、「保存」ボタンを押しましょう。</li>
+          <li>短い休憩（5分程度）を取り、心身をリフレッシュさせます。</li>
+          <li>再びタイマーをセットして次の作業セッションを開始します。4回のポモドーロ（作業セッション）を終えたら、少し長めの休憩（15～30分）を取ることが推奨されています。</li>
+          <li>「あなたの作業メモ」セクションでは、過去に保存したログを確認できます。検索やタグでの絞り込みも可能です。</li>
+          <li>「日別集計」では、日ごとの作業ログ件数を確認でき、日々の活動量を把握するのに役立ちます。</li>
+        </ul>
+        
+        <h3 class="text-xl font-semibold mt-6 mb-3 text-slate-700">ポモドーロテクニックのメリット:</h3>
+        <ul>
+          <li><strong>集中力の向上:</strong> 「25分だけ集中する」と決めることで、他のことに気を取られにくくなります。</li>
+          <li><strong>タスクの細分化:</strong> 大きなタスクも小さなポモドーロ単位に分割することで、取り組みやすくなります。</li>
+          <li><strong>進捗の可視化:</strong> 完了したポモドーロの数や作業ログで、達成感を味わえ、モチベーション維持に繋がります。</li>
+          <li><strong>疲労の軽減:</strong> 適度な休憩を挟むことで、長時間の作業による心身の疲労を和らげます。</li>
+          <li><strong>時間感覚の養成:</strong> タスクにどれくらいの時間がかかるかを見積もる能力が向上します。</li>
+        </ul>
+        <p class="mt-6">YUTOOLSのPomodoReportは、これらのポモドーロテクニックの実践をサポートするために作られました。ぜひ日々の学習やお仕事にお役立てください。集中して作業を進め、記録を残すことで、あなたの生産性向上のお手伝いができれば幸いです。</p>
+      </article>
+    </section>
+    <div class="ad-container mt-8 text-center max-w-xl mx-auto">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8070154221542267"
+           data-ad-slot="7502401677"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    let timer, isRunning = false, time = 25 * 60;
+    const timerDisplay = document.getElementById("timer");
+    const startBtn = document.getElementById("startBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const presetSelect = document.getElementById("presetSelect");
+    const customMinutes = document.getElementById("customMinutes");
+    const saveLogBtn = document.getElementById("saveLogBtn");
+
+    function updateTimerDisplay() {
+      const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+      const seconds = String(time % 60).padStart(2, '0');
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      startBtn.textContent = "動作中..."; 
+      startBtn.disabled = true; 
+      timer = setInterval(() => {
+        if (time <= 0) {
+          clearInterval(timer);
+          isRunning = false;
+          startBtn.textContent = "スタート"; 
+          startBtn.disabled = false; 
+          if (Notification.permission === "granted") {
+            new Notification("ポモドーロタイマー", { body: "おつかれさまでした！休憩の時間です。" });
+          } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+              if (permission === "granted") {
+                new Notification("ポモドーロタイマー", { body: "おつかれさまでした！休憩の時間です。" });
+              }
+            });
+          }
+          return;
+        }
+        time--;
+        updateTimerDisplay();
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      startBtn.textContent = "スタート"; 
+      startBtn.disabled = false; 
+      const selected = presetSelect.value;
+      if (selected === "custom" && customMinutes.value && parseInt(customMinutes.value) > 0) {
+        time = parseInt(customMinutes.value) * 60;
+      } else if (selected === "custom") {
+        time = 25 * 60;
+      }
+      else {
+        time = parseInt(selected) * 60;
+      }
+      updateTimerDisplay();
+    }
+
+    presetSelect.addEventListener("change", () => {
+      if (presetSelect.value === "custom") {
+        customMinutes.style.display = "inline-block";
+        customMinutes.focus();
+      } else {
+        customMinutes.style.display = "none";
+        resetTimer();
+      }
+    });
+
+    customMinutes.addEventListener("input", () => {
+      if (customMinutes.value && parseInt(customMinutes.value) > 0) {
+        resetTimer();
+      } else if (customMinutes.value === "" || parseInt(customMinutes.value) <= 0) {
+        time = 25*60; 
+        updateTimerDisplay();
+      }
+    });
+
+    startBtn.onclick = startTimer;
+    resetBtn.onclick = resetTimer;
+    updateTimerDisplay();
+
+    saveLogBtn.onclick = function () {
+      const title = document.getElementById("taskTitle").value.trim();
+      const text = document.getElementById("taskInput").value.trim();
+      const tag = document.getElementById("taskTag").value.trim();
+      if (!title && !text) {
+        alert("タイトルまたは作業内容を入力してください。");
+        return;
+      }
+      const timestamp = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const entry = { timestamp, title, text, tag: tag || "未分類" };
+      const logs = JSON.parse(localStorage.getItem("pomodoroLogs") || "[]");
+      logs.unshift(entry);
+      localStorage.setItem("pomodoroLogs", JSON.stringify(logs));
+      document.getElementById("taskTitle").value = "";
+      document.getElementById("taskInput").value = "";
+      document.getElementById("taskTag").value = "";
+      renderLogs();
+    }
+
+    let currentSort = "desc";
+    let currentTag = "";
+
+    function getLogs() {
+      return JSON.parse(localStorage.getItem("pomodoroLogs") || "[]").map(log => {
+        if (typeof log === "string") {
+          return {
+            timestamp: new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+            title: "旧形式ログ",
+            text: log,
+            tag: "未分類"
+          };
+        }
+        return { tag: "未分類", ...log };
+      });
+    }
+
+    function exportLogs() {
+      const logs = getLogs();
+      if (logs.length === 0) {
+        alert("エクスポートするログがありません。");
+        return;
+      }
+      const data = JSON.stringify(logs, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'pomodoro_logs_' + new Date().toISOString().slice(0,10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function importLogs(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (Array.isArray(importedData)) {
+            const validatedLogs = importedData.filter(log => log && typeof log.timestamp === 'string').map(log => ({
+                timestamp: log.timestamp,
+                title: String(log.title || ""),
+                text: String(log.text || ""),
+                tag: String(log.tag || "未分類")
+            }));
+            if (validatedLogs.length === 0 && importedData.length > 0) {
+                alert("インポートされたデータはログの形式と一致しませんでした。");
+                return;
+            }
+            const currentLogs = getLogs();
+            const combinedLogs = [...validatedLogs, ...currentLogs];
+            const uniqueLogs = combinedLogs.filter((log, index, self) =>
+                index === self.findIndex((l) => (
+                    l.timestamp === log.timestamp && l.title === log.title && l.text === log.text
+                ))
+            );
+            localStorage.setItem("pomodoroLogs", JSON.stringify(uniqueLogs));
+            renderLogs();
+            alert(validatedLogs.length + "件のデータをインポートし、重複を除いて更新しました。");
+          } else {
+            alert("インポート形式が不正です。ログの配列ではありません。");
+          }
+        } catch(err) {
+          alert("ファイルの読み込みまたは解析に失敗しました。\n" + err.message);
+        }
+      };
+      reader.onerror = function() {
+        alert("ファイルの読み込みに失敗しました。");
+      };
+      reader.readAsText(file);
+      event.target.value = null;
+    }
+
+    function renderLogs() {
+      const logs = getLogs();
+      const keyword = document.getElementById("searchInput")?.value.toLowerCase() || "";
+      const selectedTagElement = document.getElementById("tagFilter");
+      currentTag = selectedTagElement ? selectedTagElement.value : "";
+
+      let filteredLogs = logs.filter(log => {
+        const searchTarget = `${log.title} ${log.text} ${log.tag}`.toLowerCase();
+        const matchKeyword = !keyword || searchTarget.includes(keyword);
+        const matchTag = currentTag === "" || log.tag === currentTag;
+        return matchKeyword && matchTag;
+      });
+
+      if (currentSort === "asc") {
+        filteredLogs.sort((a, b) => new Date(a.timestamp.replace(/\//g, '-')) - new Date(b.timestamp.replace(/\//g, '-')));
+      } else {
+        filteredLogs.sort((a, b) => new Date(b.timestamp.replace(/\//g, '-')) - new Date(a.timestamp.replace(/\//g, '-')));
+      }
+
+      const logList = document.getElementById("logList");
+      if (!logList) return;
+      logList.innerHTML = "";
+
+      if (filteredLogs.length === 0) {
+        logList.innerHTML = "<li class='text-center text-gray-500 py-4'>表示するログがありません。</li>";
+      } else {
+        filteredLogs.forEach((log) => {
+          const actualIndex = logs.findIndex(item => item.timestamp === log.timestamp && item.title === log.title && item.text === log.text && item.tag === log.tag);
+          const color = stringToColor(log.tag);
+          const li = document.createElement("li");
+          li.className = "bg-gray-50 p-3 rounded-lg shadow hover:shadow-md transition-shadow";
+          li.innerHTML = `
+            <div class="relative">
+              <div class="absolute top-1 right-1 flex gap-1">
+                <button class="text-blue-600 hover:text-blue-800 text-xs p-1 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded" onclick="showEditForm(${actualIndex})" title="編集">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                </button>
+                <button class="text-red-600 hover:text-red-800 text-xs p-1 focus:outline-none focus:ring-2 focus:ring-red-300 rounded" onclick="deleteLog(${actualIndex})" title="削除">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">${log.timestamp}</div>
+              <div class="font-semibold text-gray-800 break-words">${escapeHtml(log.title) || "(タイトルなし)"}</div>
+              <div class="text-gray-700 whitespace-pre-wrap break-words mt-1">${escapeHtml(log.text)}</div>
+              ${log.tag && log.tag !== "未分類" ? `<span class="inline-block text-white text-xs px-2 py-0.5 rounded mt-2" style="background-color: ${color}; font-weight: 500;">${escapeHtml(log.tag)}</span>` : ''}
+            </div>
+          `;
+          logList.appendChild(li);
+        });
+      }
+      renderSummary(filteredLogs);
+      updateTagFilterOptions(logs);
+    }
+
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+    }
+
+    function showEditForm(originalIndex) {
+      const logs = getLogs();
+      const log = logs[originalIndex];
+      if (!log) {
+          alert("編集対象のログが見つかりません。");
+          return;
+      }
+      const existingForm = document.getElementById("editFormModal");
+      if (existingForm) existingForm.remove();
+
+      const newDiv = document.createElement("div");
+      newDiv.id = "editFormModal";
+      newDiv.className = "fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4";
+      newDiv.innerHTML = `
+        <div class="bg-white p-4 sm:p-6 rounded-xl w-full max-w-lg shadow-xl">
+          <h3 class="text-xl font-bold mb-4 text-gray-800">ログを編集</h3>
+          <div class="mb-3">
+            <label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">タイトル</label>
+            <input id="editTitle" type="text" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" value="${escapeHtml(log.title)}" />
+          </div>
+          <div class="mb-3">
+            <label for="editText" class="block text-sm font-medium text-gray-700 mb-1">本文</label>
+            <textarea id="editText" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" rows="5">${escapeHtml(log.text)}</textarea>
+          </div>
+          <div class="mb-4">
+            <label for="editTag" class="block text-sm font-medium text-gray-700 mb-1">タグ</label>
+            <input id="editTag" type="text" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" value="${escapeHtml(log.tag)}" />
+          </div>
+          <div class="flex justify-end gap-3 mt-5">
+            <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onclick="document.getElementById('editFormModal').remove()">キャンセル</button>
+            <button type="button" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onclick="saveEdit(${originalIndex})">保存</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(newDiv);
+      document.getElementById("editTitle").focus();
+    }
+
+    function saveEdit(originalIndex) {
+      const logs = getLogs();
+      logs[originalIndex].title = document.getElementById("editTitle").value.trim();
+      logs[originalIndex].text = document.getElementById("editText").value.trim();
+      logs[originalIndex].tag = document.getElementById("editTag").value.trim() || "未分類";
+      localStorage.setItem("pomodoroLogs", JSON.stringify(logs));
+      const editForm = document.getElementById("editFormModal");
+      if (editForm) editForm.remove();
+      renderLogs();
+    }
+
+    function deleteLog(originalIndex) {
+      if (confirm("このログを本当に削除しますか？\nこの操作は元に戻せません。")) {
+        const logs = getLogs();
+        logs.splice(originalIndex, 1);
+        localStorage.setItem("pomodoroLogs", JSON.stringify(logs));
+        renderLogs();
+      }
+    }
+
+    function sortLogsAsc() {
+      currentSort = "asc";
+      renderLogs();
+    }
+
+    function sortLogsDesc() {
+      currentSort = "desc";
+      renderLogs();
+    }
+
+    function renderSummary(logs) {
+      const summary = {};
+      logs.forEach(log => {
+        try {
+            const datePart = log.timestamp.split(" ")[0].replace(/-/g, '/');
+            const dateObj = new Date(datePart);
+            if (isNaN(dateObj.getTime())) { return; }
+            const date = dateObj.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            if (!summary[date]) summary[date] = 0;
+            summary[date]++;
+        } catch (e) { /* console.error("Summary date parsing error:", log.timestamp, e); */ }
+      });
+
+      const summaryList = document.getElementById("summaryList");
+      if (!summaryList) return;
+      if (Object.keys(summary).length === 0) {
+        summaryList.innerHTML = "<li class='text-center text-gray-500 py-3'>集計データがありません。</li>";
+      } else {
+        summaryList.innerHTML = Object.entries(summary)
+          .sort((a,b) => new Date(b[0]) - new Date(a[0]))
+          .map(([date, count]) => `<li class="py-1">${date}：${count} 件</li>`)
+          .join('');
+      }
+    }
+
+    function updateTagFilterOptions(logs) {
+      const tagFilter = document.getElementById("tagFilter");
+      if (!tagFilter) return;
+      const previousValue = tagFilter.value;
+      const tags = [...new Set(logs.map(log => log.tag || "未分類").filter(tag => tag))];
+      tags.sort((a, b) => a.localeCompare(b, 'ja'));
+      tagFilter.innerHTML = `<option value="">すべてのタグ</option>` +
+        tags.map(tag => `<option value="${escapeHtml(tag)}">${escapeHtml(tag)}</option>`).join('');
+      if (tags.includes(previousValue)) {
+        tagFilter.value = previousValue;
+      } else {
+        tagFilter.value = "";
+      }
+    }
+
+    function stringToColor(str) {
+      if (!str || str === "未分類") return '#9ca3af';
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+      }
+      const hue = hash % 360;
+      return `hsl(${hue}, 55%, 65%)`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const noticeContainer = document.createElement("div");
+      noticeContainer.id = "notice-container";
+      noticeContainer.className = "text-xs text-gray-500 text-center my-4 max-w-xl mx-auto px-2";
+
+      const notice = document.createElement("p");
+      notice.innerHTML = "※ 作業ログはこのブラウザ（ローカルストレージ）にのみ保存され、外部サーバーには送信されません。<br>異なるブラウザやシークレットモードでは記録は共有されません。";
+      noticeContainer.appendChild(notice);
+
+      const controlContainer = document.createElement("div");
+      controlContainer.className = "flex flex-col sm:flex-row justify-center items-center gap-3 my-5 max-w-xl mx-auto px-2";
+      controlContainer.innerHTML = `
+        <button onclick="exportLogs()" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1 -mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+          記録をエクスポート (.json)
+        </button>
+        <label class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-sm cursor-pointer text-center transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1 -mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.293a1 1 0 011.414 0L9 7.586V13a1 1 0 11-2 0V7.586L5.707 6.293a1 1 0 010-1.414zM11 6a1 1 0 100-2H9a1 1 0 100 2h2zm5-3a1 1 0 00-1-1H5a1 1 0 00-1 1v12a1 1 0 001 1h9a1 1 0 001-1V3z" clip-rule="evenodd" /></svg>
+          記録をインポート (.json)<input type="file" accept=".json,.txt" onchange="importLogs(event)" class="hidden">
+        </label>
+      `;
+      const adContainer = document.querySelector(".ad-container");
+      const mainAppContainer = document.querySelector("main > .max-w-xl.mx-auto.bg-white");
+
+      if (mainAppContainer) {
+          mainAppContainer.insertAdjacentElement('afterend', controlContainer);
+          controlContainer.insertAdjacentElement('afterend', noticeContainer);
+      } else if (adContainer && adContainer.parentNode) {
+          adContainer.parentNode.insertBefore(controlContainer, adContainer);
+          controlContainer.insertAdjacentElement('afterend', noticeContainer);
+      } else {
+          document.body.insertBefore(controlContainer, document.getElementById('footer-placeholder'));
+          document.body.insertBefore(noticeContainer, document.getElementById('footer-placeholder'));
+      }
+      renderLogs();
+      
+      if ('Notification' in window && Notification.permission === "default") {
+        // 例: setTimeout(() => Notification.requestPermission(), 5000);
+      }
+    });
+  </script>
+  <script src="/js/common.js" defer></script>
+</body>
+</html>

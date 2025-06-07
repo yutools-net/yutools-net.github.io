@@ -1,0 +1,72 @@
+<style>
+  /* header.html 専用スタイル */
+  .site-header {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important; /* 全体のフォントを指定 */
+    /* site-header.css の background-color: #f8f9fa; や border-bottom は活かされる想定 */
+  }
+
+  .site-header .site-logo,
+  .site-header .site-logo:hover {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important; /* ロゴのフォント */
+    font-weight: bold !important;
+    font-size: 1.8rem !important; /* site-header.css と同じサイズ */
+    color: #333 !important;       /* site-header.css と同じ色 */
+    text-decoration: none !important;
+    background: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  .site-header .site-logo:hover {
+    color: #007bff !important; /* ホバー時の色は site-header.css の指定を活かすか、ここで上書き */
+  }
+
+  .site-header .nav-links a,
+  .site-header .nav-links a:hover,
+  .site-header .nav-links a:focus {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important; /* ナビゲーションリンクのフォント */
+    font-size: 1rem !important; /* site-header.css と同じサイズ */
+    color: #333 !important;    /* ★トップページのような濃いグレー/黒系の色に変更★ */
+    letter-spacing: 0.01em !important; /* ★文字間を少しだけ調整 (お好みで)★ */
+    
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-weight: normal !important; /* site-header.css の指定を維持 */
+    padding: 0.5rem 1rem !important; /* site-header.css の指定を維持 */
+    display: inline-block !important;
+    transition: color 0.3s ease !important;
+    transform: none !important;
+  }
+
+  .site-header .nav-links a:hover,
+  .site-header .nav-links a:focus {
+    color: #007bff !important;  /* ★ホバー時の色を少し濃いめの青などに調整★ */
+    
+  }
+
+  /* ハンバーガーアイコンの色なども必要であればここで指定 */
+  .site-header .hamburger-icon,
+  .site-header .hamburger-icon::before,
+  .site-header .hamburger-icon::after {
+    background-color: #333 !important; /* site-header.css の指定を強化 */
+  }
+</style>
+
+<header class="site-header">
+  <div class="site-header__inner">
+      <a href="/" class="site-logo">YUTOOLS</a>
+      <nav class="site-navigation">
+          <button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation">
+              <span class="sr-only">メニューを開閉</span>
+              <span class="hamburger-icon"></span>
+          </button>
+          <ul class="nav-links" id="main-navigation">
+              <li><a href="/tools/">ツール一覧</a></li>
+              <li><a href="/pomodoreport/">ポモドーロ</a></li>
+              <li><a href="/checklist/">チェックリスト</a></li>
+              <li><a href="/league-manager/">リーグ管理</a></li>
+              </ul>
+      </nav>
+  </div>
+</header>

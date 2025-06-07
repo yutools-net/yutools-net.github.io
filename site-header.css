@@ -1,0 +1,222 @@
+/* site-header.css */
+
+/* ヘッダー全体 */
+.site-header {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.site-header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ロゴ */
+.site-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333 !important; /* indexstyle.css の影響を避ける */
+    background: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important; /* 下線も消す */
+}
+.site-logo:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    color: #007bff !important; /* ホバー色だけ付けるなど */
+}
+
+/* ナビゲーション */
+.site-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0; /* または適切な値を設定 */
+}
+
+.nav-links li {
+    margin-left: 1.5rem;
+}
+.nav-links li:first-child {
+    margin-left: 0;
+}
+
+.nav-links a {
+    font-size: 1rem;
+    color: #555 !important; /* 以下、indexstyle.css の影響を避けるために !important を使用 */
+    padding: 0.5rem 1rem !important;
+    text-decoration: none !important;
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    display: inline-block !important;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    color: #007bff !important;
+    background: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    text-decoration: underline !important; /* ホバー時に下線など */
+}
+
+/* ハンバーガーメニューボタン (モバイル用) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.hamburger-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    position: relative;
+}
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    position: absolute;
+    left: 0;
+}
+.hamburger-icon::before {
+    top: -7px;
+}
+.hamburger-icon::after {
+    top: 7px;
+}
+
+/* スクリーンリーダー用テキスト */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* モバイル表示時のスタイル */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px; /* ヘッダーの高さに合わせて調整 */
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        flex-direction: column;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e9ecef;
+        gap: 0;
+    }
+    .nav-links.is-active {
+        display: flex;
+    }
+    .nav-links li {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .nav-links a { /* モバイル時のメニュー内リンク */
+        display: block !important; /* 強制的にblock */
+        padding: 1rem !important;  /* パディングも強制 */
+        border-bottom: 1px solid #f1f1f1;
+        /* モバイル時の色や背景はPCと同様にリセットされた状態になります */
+        /* もしボタン風にしたい場合は別途スタイル調整が必要です */
+    }
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+}
+
+/* フッター全体 */
+.site-footer {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.site-footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.site-footer .copyright {
+    margin: 0;
+}
+
+.site-footer .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.site-footer .footer-nav a {
+    color: #495057 !important;
+    text-decoration: none !important;
+    background: none !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    display: inline !important;
+    transition: color 0.3s ease;
+}
+
+.site-footer .footer-nav a:hover {
+    color: #007bff !important;
+    text-decoration: underline !important;
+    background: none !important;
+    transform: none !important;
+}
+
+@media (min-width: 768px) {
+    .site-footer__inner {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

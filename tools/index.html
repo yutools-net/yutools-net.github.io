@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ツール一覧 - YUTOOLS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../site-header.css">
+    <link rel="stylesheet" href="tool-list-style.css">
+    <link rel="stylesheet" href="../indexstyle.css">
+    <script src="/js/header.js" async></script>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a href="/" class="site-logo">YUTOOLS</a>
+            <nav class="site-navigation">
+                <button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation">
+                    <span class="sr-only">メニューを開閉</span>
+                    <span class="hamburger-icon"></span>
+                </button>
+                <ul class="nav-links" id="main-navigation">
+                    <li><a href="/tools/">ツール一覧</a></li>
+                    <li><a href="/pomodoreport/">ポモドーロ</a></li> <li><a href="/checklist/">チェックリスト</a></li> <li><a href="/league-manager/">リーグ管理</a></li> </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="tool-list-main">
+        <div class="container"> <comment_user></comment_user>
+            <h1 class="page-title">YUTOOLS ツール一覧</h1>
+            <p class="page-description">YUTOOLSで提供している全ての便利なツールをご紹介します。あなたの毎日をちょっと便利に、ちょっと楽しくするツールを見つけてください。</p>
+
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-card__icon">⏱️</div>
+                    <h3 class="tool-card__title">PomodoReport</h3>
+                    <p class="tool-card__description">
+                        25分作業＋5分休憩のサイクルで集中力を高めるポモドーロタイマー。記録機能付きで、あなたの集中をやさしくサポートします。
+                    </p>
+                    <a href="/pomodoreport/" class="tool-card__button">ツールを使う</a> <comment_user></comment_user>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-card__icon">✅</div>
+                    <h3 class="tool-card__title">チェックリスト</h3>
+                    <p class="tool-card__description">
+                        シンプルで使いやすいTODOアプリ。毎日の「やること」をかわいく、そして効率的に整理できます。ブラウザに自動保存。
+                    </p>
+                    <a href="/checklist/" class="tool-card__button">ツールを使う</a> <comment_user></comment_user>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-card__icon">🏆</div>
+                    <h3 class="tool-card__title">リーグ管理ツール</h3>
+                    <p class="tool-card__description">
+                        スイス方式＆総当たり対応！対戦表や順位を自動作成。大会運営やサークル活動に最適な無料ツールです。
+                    </p>
+                    <a href="/league-manager/" class="tool-card__button">ツールを使う</a> <comment_user></comment_user>
+                </div>
+
+                </div>
+        </div>
+    </main>
+
+   <div id="footer-placeholder"></div>
+    <script src="../js/common.js"></script>
+</body>
+</html>

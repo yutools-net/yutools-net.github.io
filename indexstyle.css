@@ -1,0 +1,177 @@
+/* indexstyle.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top, #e0f2fe, #f8fafc);
+    color: #1e293b;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+h1 { /* トップページのメインタイトル用 */
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* トップページの汎用pタグ (ヘッダー下のキャッチコピーなど) */
+.container > p:first-of-type { /* より具体的に最初のpタグに適用 */
+    font-size: 1rem;
+    color: #475569;
+    margin-bottom: 2.5rem;
+}
+
+/* 汎用 ul スタイル (トップページのツール説明などで使われていたもの) */
+/* ヘッダーやフッターの ul とは site-header.css で区別 */
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+}
+
+/* 汎用 a スタイル (トップページのボタン風リンクなど) */
+/* ヘッダーやフッターの a とは site-header.css で区別 */
+a {
+    display: block;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, #3b82f6, #60a5fa);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+}
+
+/* 古いフッタースタイルは site-footer クラスで指定するため削除またはコメントアウト
+footer {
+    margin-top: 4rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+*/
+
+.letter {
+    border: 2px dashed #60a5fa;
+    background: #f0f9ff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.description-box {
+    background-color: #ffffffcc;
+    border-left: 6px solid #3b82f6;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+.description-box p { /* description-box 内のpタグのスタイル */
+    font-size: 1rem;
+    color: #475569;
+    margin-bottom: 0; /* 必要に応じて調整 */
+    line-height: 1.8;
+}
+
+
+/* 「注目のツール」セクション全体の調整 */
+.top-tool-introduction {
+    background-color: #ffffff; /* 背景を白に戻す */
+    padding: 2.5rem 1.5rem;
+    border-radius: 16px;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid #e9ecef; /* 白背景にする代わりに枠線で区別 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07); /* 少し影を調整 */
+    text-align: center; /* 中身を中央揃えに */
+}
+
+.top-tool-introduction h2 {
+    color: #1e293b;
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.top-tool-introduction > p { /* 「最近追加されたおすすめのツールです！」の部分 */
+    font-size: 1.05rem;
+    color: #475569;
+    margin-bottom: 2.5rem;
+}
+
+.top-tool-introduction .tool-grid {
+    max-width: 420px; /* カードの最大幅 */
+    margin: 0 auto 2.5rem auto; /* 上下左右中央揃え、下のボタンとの間隔 */
+}
+
+.top-tool-introduction .tool-card {
+    padding: 2rem 1.5rem;
+    background-color: #ffffff; /* tool-list-style.css から拝借 */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.top-tool-introduction .tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.top-tool-introduction .tool-card__icon {
+    font-size: 3rem;
+    margin-bottom: 1.25rem;
+    line-height: 1;
+    text-align: center; /* アイコンを中央に */
+}
+
+.top-tool-introduction .tool-card__title {
+    font-size: 1.6rem;
+    color: #1e293b;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align: center; /* タイトルを中央に */
+}
+
+.top-tool-introduction .tool-card__description {
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+    text-align: center; /* 説明文を中央に */
+}
+
+.top-tool-introduction .tool-card__button { /* このボタンは indexstyle.css の汎用 a スタイルが適用される */
+    display: inline-block; /* 中央揃えのため */
+    margin-top: auto;
+    padding: 0.9rem 1.8rem; /* 既存の a タグより少し調整 */
+    font-size: 1.05rem;
+    width: fit-content; /* ボタン幅を内容に合わせる */
+    margin-left: auto; /* 中央揃え */
+    margin-right: auto; /* 中央揃え */
+}
+
+.top-tool-introduction .button-primary { /* 「全てのツールを見る」ボタン */
+    display: inline-block; /* 中央揃えのため */
+    padding: 0.9rem 2.2rem; /* 既存の a タグより少し調整 */
+    font-size: 1.05rem;
+    /* 背景色などは汎用aタグのスタイルが適用される */
+}

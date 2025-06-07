@@ -1,0 +1,74 @@
+/* === /style.css の修正案 (yutools.net/privacy.html および terms.html のコンテンツ部分に合わせる) === */
+
+/* ページ全体の基本設定 */
+body {
+    font-family: 'Helvetica Neue', sans-serif; /* 本番サイトのフォント */
+    font-size: 16px; 
+                                            /* 本番サイトの基本フォントサイズ */
+    line-height: 1.8;                                         /* 本番サイトの行間 */
+    color: #111827;                                              /* 本番サイトの基本文字色 */
+    background-color: #f4f4f4;                               /* ページ全体の背景色 (コンテンツエリアの外側) */
+    margin: 0;                                                /* ブラウザデフォルトのマージンをリセット */
+    padding: 0;                                               /* ブラウザデフォルトのパディングをリセット */
+}
+
+/* コンテンツを囲むメインの箱 */
+.container {
+    max-width: 800px;                     /* 本番サイトのコンテンツエリア最大幅 */
+    margin: 30px auto;                    /* 上下30pxの余白、左右は自動で中央寄せ */
+    padding: 20px;                        /* 内側全方向に20pxの余白 */
+    background-color: #fff;               /* コンテンツエリアの背景色（白） */
+    border-radius: 8px;                   /* 角を少し丸くする (本番サイトの指定) */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* 薄い影をつける (本番サイトの指定) */
+    /* 本文は左揃えが一般的なので、もし text-align: center; が .container に
+       指定されていたら、削除するか text-align: left; にしてください。 */
+}
+
+/* 見出しの基本スタイル */
+h1, h2, h3, h4, h5, h6 {
+    color: #1f2937;
+    font-size: 1.25rem;                          /* 見出しの色 */
+    margin-top: 1.5em;                    /* 見出しの上の余白 (本番の指定に準拠しつつ調整) */
+    margin-bottom: 0.5em;                 /* 見出しの下の余白 (本番の指定) */
+    font-weight: bold;                    /* 見出しは太字に */
+}
+
+h1 {
+    font-size: 2rem;                     /* bodyの14pxに対して35px */
+    margin-bottom: 1rem;            /* ← ユーザーさんのローカルCSSにあった指定。上記h1,h2...の共通指定に含めました*/
+    border-bottom: 2px solid #3b82f6;    /* ← 本番に合わせるため削除（またはコメントアウト） */
+    padding-bottom: 0.5rem;         /* ← 本番に合わせるため削除（またはコメントアウト）
+}
+
+h2 {
+    font-size: 1.8em; /* bodyの14pxに対して約25.2px。本番サイトを参考に調整してください */
+}
+
+/* 段落のスタイル */
+p {
+    margin-bottom: 1em; /* 段落の下の余白 */
+}
+
+/* リストのスタイル */
+ul, ol {
+    margin-bottom: 1em;
+    padding-left: 40px; /* ブラウザのデフォルトに近い一般的な字下げ。本番サイトの実際の見た目を確認し、必要なら調整してください。 */
+}
+
+ul li, ol li {
+    margin-bottom: 0.5em; /* リストアイテムごとの下の余白 */
+}
+
+/* リンクのスタイル (本文中の一般的なリンク) */
+/* 本番サイトの本文中リンクはブラウザデフォルトの青・下線付きに見えますので、それを再現します */
+a {
+    color: #007bff; /* 標準的なリンクの青色 (一般的なブラウザデフォルトに近い色) */
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #0056b3; /* ホバー時の色（少し濃い青） */
+    text-decoration: none; /* ホバー時に下線を消すなど (お好みで) */
+}
+
+/* === CSSここまで === */
