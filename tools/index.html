@@ -9,23 +9,12 @@
     <link rel="stylesheet" href="tool-list-style.css">
     <link rel="stylesheet" href="../indexstyle.css">
     <script src="/js/header.js" async></script>
+    <link rel="stylesheet" href="/site-header.css">
+    <script src="/js/header.js" async></script>
 </head>
 <body>
 
-    <header class="site-header">
-        <div class="site-header__inner">
-            <a href="/" class="site-logo">YUTOOLS</a>
-            <nav class="site-navigation">
-                <button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation">
-                    <span class="sr-only">メニューを開閉</span>
-                    <span class="hamburger-icon"></span>
-                </button>
-                <ul class="nav-links" id="main-navigation">
-                    <li><a href="/tools/">ツール一覧</a></li>
-                    <li><a href="/pomodoreport/">ポモドーロ</a></li> <li><a href="/checklist/">チェックリスト</a></li> <li><a href="/league-manager/">リーグ管理</a></li> </ul>
-            </nav>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
     <main class="tool-list-main">
         <div class="container"> <comment_user></comment_user>
             <h1 class="page-title">YUTOOLS ツール一覧</h1>
@@ -60,6 +49,15 @@
                 </div>
 
                 </div>
+                <div class="tool-card">
+    <div class="tool-card__icon">🧙‍♂️</div>
+    <h3 class="tool-card__title">Mail Wizard</h3>
+    <p class="tool-card__description">
+        メールアドレスの整形・分析・出力を一括で！タイプミス検出、NGドメイン警告、CSV解析、カスタムフォーマットなどを備えた高機能メール処理ツールです。
+    </p>
+    <a href="https://yutools.net/mail-wizard/" class="tool-card__button">ツールを使う</a>
+</div>
+
         </div>
     </main>
 
