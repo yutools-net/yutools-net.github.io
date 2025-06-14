@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>その計算、一瞬で。「さぼカリ (SaboCalc)」</title>
+    
+    <!-- OGP (Open Graph Protocol) 設定 -->
+    <meta property="og:title" content="「あの関数なんだっけ？」から解放宣言。さぼカリで計算はもっと手軽になります。" />
+    <meta property="og:description" content="「ちょっとした計算」のために、まず数式を検索し、Excelを立ち上げ、セルを整える…。そんな面倒な手間から、あなたを解放します。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://yutools.net/blog/why-sabocalc/" /> <!-- ★この記事のパーマリンクに書き換えてください★ -->
+    <meta property="og:image" content="https://yutools.net/sabocalc/images/sabocalc-icon.webp" /> <!-- ★記事用のアイキャッチ画像があれば、そのURLに書き換えてください★ -->
+    <meta property="og:site_name" content="YUTOOLS" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- 外部ライブラリとCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/site-header.css"> <!-- サイト共通ヘッダースタイル -->
+    
+    <style>
+        body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background-color: #f0f2f5; }
+        .article-body h2 { font-size: 1.75rem; font-weight: 700; color: #1f2937; padding-bottom: 0.5rem; border-bottom: 2px solid #3b82f6; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        .article-body h3 { font-size: 1.25rem; font-weight: 700; color: #374151; padding-left: 1rem; border-left: 4px solid #60a5fa; margin-top: 2rem; margin-bottom: 1rem; }
+        .article-body p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1rem;
+            /* ▼▼▼【修正点①】単語の途中での改行を防止 ▼▼▼ */
+            word-break: keep-all;
+        }
+        .article-body a:not(.no-underline) { color: #2563eb; text-decoration: underline; }
+        .article-body a:hover:not(.no-underline) { text-decoration: none; }
+        .article-body strong { background: linear-gradient(transparent 60%, #fef08a 60%); font-weight: 700; }
+        .article-body code { background-color: #e5e7eb; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+        .screenshot-placeholder { background-color: #f3f4f6; border: 2px dashed #9ca3af; padding: 4rem 2rem; text-align: center; color: #6b7280; border-radius: 0.5rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+        .scenario-box { border: 1px solid #e5e7eb; border-radius: 0.75rem; margin-top: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); }
+        .scenario-box-title { background-color: #f9fafb; padding: 0.75rem 1.25rem; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #4b5563; }
+        .scenario-box-content { padding: 1.25rem; }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen">
+
+    <div id="header-placeholder" class="w-full"></div>
+
+    <main class="w-full max-w-3xl p-4 sm:p-6 lg:p-8 flex-grow">
+        <article class="bg-white rounded-2xl shadow-xl p-6 md:p-10 article-body">
+            <header>
+                <p class="text-sm text-gray-500">YUTOOLSブログ</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mt-2 leading-tight">「あの関数なんだっけ？」から解放宣言。<br>さぼカリで計算はもっと手軽になります。</h1>
+                <p class="mt-4 text-gray-600">「ちょっとした計算」のために、まず数式を検索し、Excelを立ち上げ、セルを整える…。そんな地味に面倒な手間から、あなたを解放します。</p>
+            </header>
+
+            <section>
+                <h2>その計算、一瞬で。<br>日常と仕事の「面倒」を解決する計算ツール集</h2>
+                <p>
+                    こんにちは！日常の「ちょっと面倒」を解決する便利ツールサイト「YUTOOLS」を運営しているYです。
+                </p>
+                <p>
+                    突然ですが、あなたはこんな経験ありませんか？
+                </p>
+                <blockquote class="border-l-4 border-gray-400 pl-4 py-2 my-4 bg-gray-50">
+                    <p class="mb-0">「先月の売上と今月の売上、何パーセント伸びたんだっけ？」</p>
+                    <p class="text-sm text-gray-500 mt-2">（…えーっと、Excelでの増減率の式は…確か…）<br>→ Googleで「Excel 増減率 関数」と検索。<br>→ `=(B1-A1)/A1` という式を見つける。<br>→ Excelを立ち上げ、数字を入力し、数式を打ち込む。<br>→ セルの書式を「パーセント」に変える。</p>
+                    <p class="font-bold mt-2">…やっと答えが出た。本当に欲しかったのは、たった一つの数字だけなのに。</p>
+                </blockquote>
+                <p>
+                    この<strong>「計算そのもの」に至るまでの、地味に長い道のり。</strong>
+                    これこそが、私たちが日常で感じるストレスの正体です。
+                </p>
+                <p>
+                    私が作った**「さぼカリ (SaboCalc)」**は、その道のりをすべてショートカットし、あなたの「知りたい！」という気持ちに、一直線で応えるために生まれました。
+                </p>
+            </section>
+            
+            <section>
+                <h2>さぼカリの思想：「検索」も「思い出す」も、<br>もういらない。</h2>
+                <p>
+                    さぼカリが提供する最大の価値は、<strong>「手軽さ」</strong>です。
+                </p>
+                <p>
+                    Excelが「万能な画材セット」だとしたら、さぼカリは「目的別に色分けされた、最高のクレヨンセット」。
+                    難しい色の作り方を覚える必要はありません。使いたい色を、ただ手に取るだけです。
+                </p>
+                <p>
+                    <strong>「あの式、なんだっけな？」と検索する時間も、関数を思い出す手間も、もういりません。</strong>
+                </p>
+                <p>
+                    やりたいことを<strong>選んで、数字を入れて、ポチポチするだけ。</strong>
+                    それだけで、あなたが本当に欲しかった答えが、一瞬で目の前に現れます。
+                </p>
+                
+                <div class="screenshot-placeholder">
+                    <img src="/blog/images/sabocalc-toolmenu.png">
+                </div>
+            </section>
+
+            <section>
+                <h2>「関数を調べる」が面倒になる、<br>よくある5つの場面</h2>
+                <p>
+                    さぼカリが、いかにあなたの「思考のノイズ」を消し去るか。具体的な場面を見ていきましょう。
+                </p>
+
+                <div class="scenario-box">
+                    <div class="scenario-box-title">場面①：「〇%増減」を知りたいとき</div>
+                    <div class="scenario-box-content">
+                        <p><strong>検索する手間：</strong>「=(新-旧)/旧」という式を、毎回思い出せますか？<br>
+                        <strong>さぼカリの場合：</strong>「パーセント計算」を選び、「XからYへの増減率は？」の欄に2つの数字を入れるだけ。考える必要すらありません。</p>
+                    </div>
+                </div>
+
+                <div class="scenario-box">
+                    <div class="scenario-box-title">場面②：「N日後って、何月何日？」を知りたいとき</div>
+                    <div class="scenario-box-content">
+                        <p><strong>検索する手間：</strong>`TODAY()`や`DATE()`など、似た関数が多くて混乱しませんか？<br>
+                        <strong>さぼカリの場合：</strong>「日付計算」を選び、カレンダーから日付を選んで日数を入力するだけ。直感的です。</p>
+                    </div>
+                </div>
+                
+                <div class="scenario-box">
+                    <div class="scenario-box-title">場面③：「飲み会の傾斜割り勘」をしたいとき</div>
+                    <div class="scenario-box-content">
+                        <p><strong>検索する手間：</strong>…もはや検索する気も起きませんね。自力で数式を組み立てるしかありません。<br>
+                        <strong>さぼカリの場合：</strong>「割り勘計算」を選び、「合計金額」「人数」「差額」を日本語の案内に従って入れるだけ。手軽さが違います。</p>
+                    </div>
+                </div>
+
+                <div class="scenario-box">
+                    <div class="scenario-box-title">場面④：「ローンの返済額」をざっくり知りたいとき</div>
+                    <div class="scenario-box-content">
+                        <p><strong>検索する手間：</strong>`PMT`関数の存在を知っていても、利率、期間、現在価値…と引数の順番を間違うとエラーに。<br>
+                        <strong>さぼカリの場合：</strong>「ローン計算」を選び、見たままの項目（借入額、年利率、返済期間）を埋めるだけです。</p>
+                    </div>
+                </div>
+
+                <div class="scenario-box">
+                    <div class="scenario-box-title">場面⑤：「損益分岐点」を計算したいとき</div>
+                    <div class="scenario-box-content">
+                        <p><strong>検索する手間：</strong>「損益分岐点 計算式」と検索するところからスタート。ビジネス用語も多くて大変です。<br>
+                        <strong>さぼカリの場合：</strong>「損益分岐点計算」を選び、固定費や変動費を入れるだけ。「これ以上売れば黒字」のラインが秒速でわかります。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2>あなたの「脳のメモリ」を、もっと大事なことに</h2>
+                <p>
+                    さぼカリは、Excelより高機能なわけではありません。むしろ真逆です。
+                    機能や自由度を徹底的に削ぎ落とし、<strong>「特定の目的を、最も手軽に達成する」</strong>ことだけに特化しています。
+                </p>
+                <p>
+                    なぜなら、あなたの時間と、<strong>あなたの「脳のメモリ（ワーキングメモリ）」</strong>は、有限で、何よりも貴重な資産だからです。
+                </p>
+                <p>
+                    関数の構文を検索したり、引数の順番を思い出したり…。
+                    そんな些細なことに脳のリソースを使うのは、あまりにもったいない。
+                </p>
+                <p>
+                    さぼカリは、あなたの「計算」だけでなく、**計算にまつわる「面倒な検索や思い出す手間」そのものを、まるごと肩代わりします。**
+                    空いた脳のスペースで、もっとクリエイティブで、あなたにしかできない、本当に価値のあることを考えてください。
+                </p>
+            </section>
+
+            <!-- ▼▼▼【修正点②】中央揃えの範囲を修正 ▼▼▼ -->
+            <section class="mt-12 bg-blue-100 p-8 rounded-2xl">
+                 <h2 class="border-none mt-0 text-2xl">電卓以上、Excel未満。この「ちょうど良さ」が、あなたの味方です。</h2>
+                 <p class="mt-4">
+                    もちろん、複雑なデータ分析や大規模な表計算では、Excelは最強のツールです。<br>
+                    でも、日常で出くわすほとんどの「ちょっとした計算」は、Excelを立ち上げる前に、もっと手軽に解決できるはずです。
+                 </p>
+                 <p class="mt-4">
+                    あなたのツールボックスに、電卓とExcelに加えて、「さぼカリ」という新しい選択肢を加えてみませんか？
+                 </p>
+                 <div class="mt-6 text-center">
+                    <a href="https://yutools.net/sabocalc/" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg transform hover:scale-105 transition-transform duration-300 no-underline">
+                        お手軽計算ツール「さぼカリ」を試す
+                    </a>
+                    <p class="text-sm text-gray-500 mt-2">(ブックマーク推奨。もちろん無料で、登録も不要です)</p>
+                 </div>
+            </section>
+            <!-- ▲▲▲ ここまで ▲▲▲ -->
+
+        </article>
+    </main>
+
+    <div id="footer-placeholder" class="w-full"></div>
+
+    <script src="/js/header.js" async></script>
+    <script src="/js/common.js" defer></script>
+</body>
+</html>
